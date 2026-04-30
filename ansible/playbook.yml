@@ -1,4 +1,4 @@
-- name: Prepare servers and deploy application
+- name: Prepare servers, deploy application and setup monitoring
   hosts: webservers
   become: true
 
@@ -6,6 +6,17 @@
     app_image: "nginx:latest"
     app_container_name: "web-app"
     app_port: 80
+
+    datadog_api_key: "{{ vault_datadog_api_key }}"
+    datadog_site: "datadoghq.com"
+
+    datadog_checks:
+      http_check:
+        init_config:
+        instances:
+          - name: "web-app"
+            url: "http://localhost:80"
+            timeout: 5
 
   roles:
     - role: geerlingguy.pip
@@ -15,6 +26,10 @@
     - role: geerlingguy.docker
       tags:
         - prepare
+
+    - role: datadog.datadog
+      tags:
+        - monitoring
 
   tasks:
     - name: Deploy application container
