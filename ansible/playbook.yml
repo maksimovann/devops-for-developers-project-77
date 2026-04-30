@@ -1,0 +1,29 @@
+- name: Prepare servers and deploy application
+  hosts: webservers
+  become: true
+
+  vars:
+    app_image: "nginx:latest"
+    app_container_name: "web-app"
+    app_port: 80
+
+  roles:
+    - role: geerlingguy.pip
+      tags:
+        - prepare
+
+    - role: geerlingguy.docker
+      tags:
+        - prepare
+
+  tasks:
+    - name: Deploy application container
+      community.docker.docker_container:
+        name: "{{ app_container_name }}"
+        image: "{{ app_image }}"
+        state: started
+        restart_policy: always
+        published_ports:
+          - "{{ app_port }}:80"
+      tags:
+        - deploy
