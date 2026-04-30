@@ -1,17 +1,26 @@
-setup:
+terraform-setup:
 	terraform -chdir=terraform init
 
-plan:
+terraform-plan:
 	terraform -chdir=terraform plan
 
-apply:
+terraform-apply:
 	terraform -chdir=terraform apply
 
-destroy:
+terraform-destroy:
 	terraform -chdir=terraform destroy
 
-fmt:
+terraform-fmt:
 	terraform -chdir=terraform fmt -recursive
 
-validate:
+terraform-validate:
 	terraform -chdir=terraform validate
+
+ansible-setup:
+	ansible-galaxy install -r ansible/requirements.yml
+
+prepare:
+	ansible-playbook -i ansible/inventory.ini ansible/playbook.yml --tags prepare
+
+deploy:
+	ansible-playbook -i ansible/inventory.ini ansible/playbook.yml --tags deploy
