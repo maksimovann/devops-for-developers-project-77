@@ -5,5 +5,7 @@ roles:
   - name: geerlingguy.docker
     version: 8.0.0
 
+  - name: datadog.datadog
+
 collections:
   - name: community.docker
